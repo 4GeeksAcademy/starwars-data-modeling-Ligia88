@@ -7,23 +7,45 @@ from eralchemy2 import render_er
 
 Base = declarative_base()
 
-class Person(Base):
-    __tablename__ = 'person'
-    # Here we define columns for the table person
-    # Notice that each column is also a normal Python instance attribute.
+class Characters(Base):
+    __tablename__ = 'characters'
     id = Column(Integer, primary_key=True)
-    name = Column(String(250), nullable=False)
+    Name = Column(String(20))
+    Height = Column(Integer)
+    Mass = Column(Integer)
+    HairColor = Column(String(20))
+    PlanetID = Column(Integer, ForeignKey('planets.ID'))
+    Planet = relationship("Planets")
 
-class Address(Base):
-    __tablename__ = 'address'
-    # Here we define columns for the table address.
-    # Notice that each column is also a normal Python instance attribute.
-    id = Column(Integer, primary_key=True)
-    street_name = Column(String(250))
-    street_number = Column(String(250))
-    post_code = Column(String(250), nullable=False)
-    person_id = Column(Integer, ForeignKey('person.id'))
-    person = relationship(Person)
+class Planets(Base):
+    __tablename__ = 'planets'
+    ID = Column(Integer, primary_key=True)
+    Name = Column(String(20))
+    Diameter = Column(Integer)
+    Rotation = Column(Integer)
+    Terrain = Column(String(20))
+
+class Starships(Base):
+    __tablename__ = 'starships'
+    ID = Column(Integer, primary_key=True)
+    Name = Column(String(20))
+    Model = Column(String(50))
+    Length = Column(Integer)
+
+class FavoritePlanets(Base):
+    __tablename__ = 'favorite_planets'
+    ID = Column(Integer, primary_key=True)
+    PlanetID = Column(Integer, ForeignKey('planets.ID'), unique=True)
+
+class FavoriteCharacters(Base):
+    __tablename__ = 'favorite_characters'
+    ID = Column(Integer, primary_key=True)
+    CharacterID = Column(Integer, ForeignKey('characters.id'), unique=True)
+
+class FavoriteStarships(Base):
+    __tablename__ = 'favorite_starships'
+    ID = Column(Integer, primary_key=True)
+    StarshipID = Column(Integer, ForeignKey('starships.ID'), unique=True)
 
     def to_dict(self):
         return {}
